@@ -1,21 +1,30 @@
-//create a web server
-var express = require('express');
-var router = express.Router();
-var Comment = require('../models/comment');
-var Post = require('../models/post');
-var User = require('../models/user');
-var jwt = require('jsonwebtoken');
-var secret = 'harrypotter';
+// Create a web server 
+// 1. Create a web server that listens on port 3000
+// 2. When you visit the root URL, it should display "Hello, World!"
+// 3. When you visit the URL /cats, it should display "Meow!"
+// 4. When you visit the URL /dogs, it should display "Woof!"
+// 5. When you visit the URL /cats_and_dogs, it should display "Dogs and cats living together...mass hysteria!!"
 
-//create a comment
-router.post('/', function(req, res, next){
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    jwt.verify(token, secret, function(err, decoded){
-        if(err){
-            return res.status(403).send({
-                success: false,
-                message: 'Failed to authenticate token.'
-            });
-        }else{
-            var newComment = new Comment({
-                content: req.body.content,
+var http = require('http');
+var url = require('url');
+
+http.createServer(function(req, res) {
+    var path = url.parse(req.url).pathname;
+    if (path === '/') {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('Hello, World!');
+    } else if (path === '/cats') {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('Meow!');
+    } else if (path === '/dogs') {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('Woof!');
+    } else if (path === '/cats_and_dogs') {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('Dogs and cats living together...mass hysteria!!');
+    } else {
+        res.writeHead(404, {'Content-Type': 'text/plain'});
+        res.end('Page not found');
+    }
+}).listen(3000);
+console.log('Server started on localhost:3000; press Ctrl-C to terminate...');
